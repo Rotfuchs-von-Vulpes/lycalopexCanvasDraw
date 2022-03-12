@@ -1,6 +1,7 @@
 import { mouse, createKeyboard } from './input';
 import { createInputEl, createOptions } from './components';
 import createACanvas from './canvas';
+import { figureType } from './graphics';
 import { createPoint } from './utils';
 
 const drawBar = document.getElementById('draw') as HTMLElement;
@@ -16,7 +17,16 @@ let canvas = createACanvas(
 drawBar.append(
 	createInputEl('button', '\u25A1', 'New path', () => {
 		mouse.mode = 'drawing';
-	})
+		canvas.addFigure(figureType.path);
+	}),
+	createInputEl('button', '/', 'New line', () => {
+		mouse.mode = 'drawing';
+		canvas.addFigure(figureType.line);
+	}),
+	createInputEl('button', '\u25AD', 'New rectangle', () => {
+		mouse.mode = 'drawing';
+		canvas.addFigure(figureType.rectangle);
+	}),
 );
 lineStyleBar.append(
 	createInputEl('color', '#000000', 'Color', (el) =>

@@ -129,10 +129,74 @@ export function createLineFigure(
 		},
 		tracePath(ctx: CanvasRenderingContext2D) {
 			ctx.beginPath();
+			ctx.moveTo(points[0]?.x, points[0]?.y);
+			ctx.lineTo(points[1]?.x, points[1]?.y);
+		},
+	};
+}
+
+export function createRectangleFigure(
+	style: Style = {
+		color: '#00000',
+		lineWidth: 1,
+		lineCap: 'butt',
+		lineJoin: 'miter',
+	},
+	points: Point[] = []
+): Figure {
+	return {
+		...createGenericFigure(style, points),
+		addPoint(point: Point) {
+			this.points.push({ ...point });
+
+			return this.points.length >= 2;
+		},
+		tracePath(ctx: CanvasRenderingContext2D) {
+			ctx.beginPath();
+			ctx.moveTo(points[0]?.x, points[0]?.y);
+			ctx.lineTo(points[1]?.x, points[0]?.y);
+			ctx.lineTo(points[1]?.x, points[1]?.y);
+			ctx.lineTo(points[0]?.x, points[1]?.y);
+			ctx.closePath();
+		},
+		drawGhost(ctx, end) {
+			if (this.points.length === 0) return;
+
+			ctx.strokeStyle = 'black';
+			ctx.lineWidth = 1;
+			ctx.lineCap = 'butt';
+			ctx.lineJoin = 'miter';
+			ctx.setLineDash([2, 3]);
+
+			ctx.beginPath();
+			ctx.moveTo(points[0]?.x, points[0]?.y);
+			ctx.lineTo(end.x, points[0]?.y);
+			ctx.lineTo(end.x, end.y);
+			ctx.lineTo(points[0]?.x, end.y);
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.fillStyle = 'white';
+			ctx.setLineDash([]);
+
+			let unpainted = true;
 			for (let point of this.points) {
-				ctx.lineTo(point.x, point.y);
+				if (
+					unpainted &&
+					end.x > point.x - 4 &&
+					end.x < point.x + 4 &&
+					end.y > point.y - 4 &&
+					end.y < point.y + 4
+				) {
+					ctx.fillStyle = 'red';
+					ctx.fillRect(point.x - 2, point.y - 2, 4, 4);
+					ctx.fillStyle = 'white';
+					unpainted = false;
+				} else {
+					ctx.fillRect(point.x - 2, point.y - 2, 4, 4);
+				}
+				ctx.strokeRect(point.x - 2, point.y - 2, 4, 4);
 			}
-			if (this.closed) ctx.closePath();
 		},
 	};
 }

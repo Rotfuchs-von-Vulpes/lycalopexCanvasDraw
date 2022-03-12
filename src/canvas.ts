@@ -1,5 +1,5 @@
 import { Point, createPoint, Figure, Style as LineStyle, Mouse, Keyboard, Style } from './utils';
-import { createPathFigure, figureType } from './graphics';
+import { createLineFigure, createPathFigure, createRectangleFigure, figureType } from './graphics';
 
 interface CanvasScreen {
 	el: HTMLCanvasElement;
@@ -39,6 +39,12 @@ export default function createACanvas(ctxEl: HTMLCanvasElement, mouse: Mouse, ke
 			switch (type) {
 				case figureType.path:
 					this.ghostFigure = createPathFigure(this.style);
+					break;
+				case figureType.line:
+					this.ghostFigure = createLineFigure(this.style);
+					break;
+				case figureType.rectangle:
+					this.ghostFigure = createRectangleFigure(this.style);
 			}
 		},
 		render() {
