@@ -1,0 +1,31 @@
+* {
+  background-color: #202020;
+  color: whitesmoke;
+}
+
+#draw, #lineStyle, #screen {
+  margin: 5px;
+  border: 1px whitesmoke solid;
+  padding: 10px;
+}
+
+#app {
+  display: grid;
+  grid-template-areas: "d d" "l s";
+}
+
+#draw {
+  grid-area: d;
+}
+
+#lineStyle {
+  grid-area: l;
+}
+
+#screen {
+  grid-area: s;
+}
+
+.input {
+  padding-bottom: 10px;
+}
